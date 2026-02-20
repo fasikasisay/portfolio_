@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fasika Sisay | Developer Portfolio</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<script>
+const canvas = document.getElementById("particle-canvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+const particleCount = 100;
+
+const mouse = {
+    x: null,
+    y: null,
+    radius: 120
+};
+
+window.addEventListener("mousemove", function(event) {
+    mouse.x = event.x;
+    mouse.y = event.y;
+});
+
+window.addEventListener("resize", function() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
+class Particle {
+    constructor(x, y, dx, dy, size) {
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy = dy;
+        this.size = size;
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = "#00ffd5";
+        ctx.fill();
+    }
+
+    update() {
+        if (this.x > canvas.width || this.x < 0) this.dx = -this.dx;
+        if (this.y > canvas.height || this.y < 0) this.dy = -this.dy;
+
+        let dx = mouse.x - this.x;
+        let dy = mouse.y - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < mouse.radius) {
+            this.x -= dx / 20;
+            this.y -= dy / 20;
+        }
+
+        this.x += this.dx;
+        this.y += this.dy;
+
+        this.draw();
+    }
+}
+
+function init() {
+    particles = [];
+    for (let i = 0; i < particleCount; i++) {
+        let size = Math.random() * 2 + 1;
+        let x = Math.random() * canvas.width;
+        let y = Math.random() * canvas.height;
+        let dx = (Math.random() - 0.5) * 1.5;
+        let dy = (Math.random() - 0.5) * 1.5;
+        particles.push(new Particle(x, y, dx, dy, size));
+    }
+}
+
+function connectParticles() {
+    for (let a = 0; a < particles.length; a++) {
+        for (let b = a; b < particles.length; b++) {
+            let dx = particles[a].x - particles[b].x;
+            let dy = particles[a].y - particles[b].y;
+            let distance = dx * dx + dy * dy;
+
+            if (distance < 10000) {
+                ctx.strokeStyle = "rgba(0, 255, 213, 0.08)";
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(particles[a].x, particles[a].y);
+                ctx.lineTo(particles[b].x, particles[b].y);
+                ctx.stroke();
+            }
+        }
+    }
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => p.update());
+    connectParticles();
+    requestAnimationFrame(animate);
+}
+
+init();
+animate();
+</script>
+<body>
+<div class="background-wrapper">
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Cultural Pattern Overlay -->
+    <div class="habesha-pattern"></div>
+</div>
+<!-- NAVBAR -->
+<header>
+    <nav class="container">
+        <h1 class="logo">Fasika Sisay</h1>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact" class="btn-small">Contact</a></li>
+        </ul>
+        <div class="hamburger">&#9776;</div>
+    </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero container">
+    <div class="hero-text">
+        <h2>Hello, I'm <span>Fasika Sisay</span></h2>
+        <p>Full-stack dev building clean, scalable and modern websites and applications.</p>
+        <br><br>
+        <a href="#projects" class="btn">View My Work</a>
+    </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="section container">
+    <h3>About Me</h3>
+    <p>
+        I'm a passionate developer who loves solving real-world problems using clean and efficient code.
+        I specialize in frontend systems, modern web design, and database-driven applications.
+    </p>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="section container">
+    <h3>Skills</h3>
+    <div class="skills-grid">
+        <div class="skill">Java</div>
+        <div class="skill">MySQL</div>
+        <div class="skill">JavaScript</div>
+        <div class="skill">HTML & CSS</div>
+        
+    </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="section container">
+    <h3>Projects</h3>
+    <div class="projects-grid">
+
+        <div class="project-card">
+            <h4>budget tracker System</h4>
+            <p>A budget tracking web app using Firebase and Chart.js</p>
+            <div class="project-links">
+                <a href="#">Live</a>
+                <a href="#">GitHub</a>
+            </div>
+        </div>
+
+        <div class="project-card">
+            <h4>Hospital Queue Management system</h4>
+            <p>Computer-based Queue system using JavaScript html and css.</p>
+            <div class="project-links">
+                <a href="#">Live</a>
+                <a href="#">GitHub</a>
+            </div>
+        </div>
+
+        <div class="project-card">
+            <h4>Event Management Website</h4>
+            <p>PHP & MySQL full authentication system with admin dashboard.</p>
+            <div class="project-links">
+                <a href="#">Live</a>
+                <a href="#">GitHub</a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- CONTACT CTA -->
+<section id="contact" class="cta">
+    <h3>Let's Work Together</h3>
+    <p>Have a project in mind? Let’s build something great.</p>
+    <br><br>
+    <a href="sfasika007@gmail.com" class="btn">Get In Touch</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <p>© 2026 Fasika Sisay. All Rights Reserved.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
